@@ -56,3 +56,7 @@ body {
 .hide {
   display: none;
 }
+
+.triggered {
+  border: 1px solid red;
+}

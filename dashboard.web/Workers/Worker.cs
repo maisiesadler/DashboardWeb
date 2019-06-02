@@ -28,10 +28,17 @@ namespace dashboard.web.Workers
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation($"Worker running at: {DateTime.Now}.");
-                var triggerable = _remindersProvider.GetTriggerable();
-                if (triggerable.Any())
+                lock (_remindersProvider.SyncRoot)
                 {
-                    _subscriptionManager.Push(string.Join(",", triggerable.Select(t => t.ReminderText)));
+                    var triggerable = _remindersProvider.GetTriggerable();
+                    if (triggerable.Any())
+                    {
+                        foreach(var t in triggerable)
+                        {
+                            _remindersProvider.MarkAsTriggered(t.Id);
+                        }
+                        _subscriptionManager.Push(string.Join(",", triggerable.Select(t => t.Value.ReminderText)));
+                    }
                 }
                 await Task.Delay(10000, stoppingToken);
             }

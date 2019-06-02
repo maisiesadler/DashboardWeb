@@ -5,13 +5,12 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 <ul>
     @foreach (var item in Model.Reminders)
     {
-        <li>@item.Date.ToString() - @item.ReminderText</li>
+        <li class="@(@item.Triggered ? "triggered": "")">@item.Value.Date.ToString() - @item.Value.ReminderText</li>
     }
 </ul>
 

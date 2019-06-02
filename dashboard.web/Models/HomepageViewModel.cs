@@ -5,7 +5,7 @@ namespace dashboard.web.Models
 {
     public class HomepageViewModel
     {
-        public HomepageViewModel(List<Reminder> reminders)
+        public HomepageViewModel(List<Triggerable<Reminder>> reminders)
         {
             Reminders = reminders;
             Options = new List<SelectListItem>()
@@ -17,7 +17,7 @@ namespace dashboard.web.Models
             };
         }
 
-        public List<Reminder> Reminders { get; set; }
+        public List<Triggerable<Reminder>> Reminders { get; set; }
         public List<SelectListItem> Options { get; set; }
     }
 }
