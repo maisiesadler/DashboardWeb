@@ -1,0 +1,34 @@
+﻿@model dashboard.web.Models.HomepageViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<ul>
+    @foreach (var item in Model.Reminders)
+    {
+        <li>@item.Date.ToString() - @item.ReminderText</li>
+    }
+</ul>
+
+<form action="/api/Reminders" method="post">
+    <div class="form-horizontal">
+        <h4>Add New</h4>
+        <hr />
+        <div class="text-danger" />
+        <input type="text" data-val="true" data-val-required="Must provide some text for the reminder." id="ReminderText" name="ReminderText" />
+        <select name="Time" asp-items="Model.Options" id="Time"></select>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</form>
+
+<div id="subscribe-btn" class="hide">Subscribe</div>
+<div id="unsubscribe-btn" class="hide">Unsubscribe</div>
