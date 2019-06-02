@@ -1,3 +1,7 @@
+# Dashboard
+
+Personal dashboard with push notifications.
+
 ## Service worker
 
 For the service worker to work, public/private keys must be provided.
