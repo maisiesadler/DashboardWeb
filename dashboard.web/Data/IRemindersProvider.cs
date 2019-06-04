@@ -20,6 +20,7 @@ namespace dashboard.web
     public interface IRemindersProvider
     {
         long Add(Reminder reminder);
+        void Complete(long id);
         List<Triggerable<Reminder>> Get();
         List<DbItem<Reminder>> GetTriggerable();
         void MarkAsTriggered(long id);
@@ -38,6 +39,14 @@ namespace dashboard.web
             lock (_syncRoot)
             {
                 return _database.Add(reminder);
+            }
+        }
+
+        public void Complete(long id)
+        {
+            lock (_syncRoot)
+            {
+                _database.Close(id);
             }
         }
 

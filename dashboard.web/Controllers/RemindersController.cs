@@ -15,13 +15,22 @@ namespace dashboard.web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add([Bind("Time", "ReminderText")] AddReminderModel addReminderModel)
+        public IActionResult Add([Bind("Time", "ReminderText")] ReminderAddModel reminderAddModel)
         {
-            if (addReminderModel == null || string.IsNullOrWhiteSpace(addReminderModel.ReminderText)) return BadRequest();
-            
-            var remindAt = DateTime.UtcNow.AddSeconds(int.Parse(addReminderModel.Time));
-            _remindersProvider.Add(new Reminder(remindAt, addReminderModel.ReminderText));
+            if (reminderAddModel == null || string.IsNullOrWhiteSpace(reminderAddModel.ReminderText)) return BadRequest();
+
+            var remindAt = DateTime.UtcNow.AddSeconds(int.Parse(reminderAddModel.Time));
+            _remindersProvider.Add(new Reminder(remindAt, reminderAddModel.ReminderText));
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPut("done")]
+        public IActionResult Done(ReminderCompletedModel reminderCompletedModel)
+        {
+            if (reminderCompletedModel == null) return BadRequest();
+
+            _remindersProvider.Complete(reminderCompletedModel.Id);
+            return Ok();
         }
     }
 }

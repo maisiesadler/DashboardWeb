@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace dashboard.web
     {
         public DbItem<T> DbItem { get; }
         public T Value => DbItem.Value;
+        public long Id => DbItem.Id;
         public bool Triggered { get; set; }
 
         public Triggerable(DbItem<T> value)
@@ -32,8 +34,8 @@ namespace dashboard.web
 
     public class TriggerableInMemDatabase<T>
     {
-        protected Dictionary<long, Triggerable<T>> _data = new Dictionary<long, Triggerable<T>>();
-        protected Dictionary<long, T> _closed = new Dictionary<long, T>();
+        protected ConcurrentDictionary<long, Triggerable<T>> _data = new ConcurrentDictionary<long, Triggerable<T>>();
+        protected ConcurrentDictionary<long, T> _closed = new ConcurrentDictionary<long, T>();
         private long _nextId = 0;
 
         public long Add(T t)
@@ -52,6 +54,18 @@ namespace dashboard.web
                 return triggered;
 
             throw new Exception("Cannot find item with id " + id);
+        }
+
+        public bool Close(long id)
+        {
+            if (_data.TryRemove(id, out var val))
+            {
+                if (!_closed.TryAdd(id, val.Value))
+                    throw new Exception($"Could not close {id}");
+                return true;
+            }
+
+            return false;
         }
 
         public void SetTriggered(long id, bool triggered)

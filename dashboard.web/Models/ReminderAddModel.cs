@@ -2,7 +2,7 @@ using System;
 
 namespace dashboard.web.Models
 {
-    public class AddReminderModel
+    public class ReminderAddModel
     {
         public string Time { get; set; }
         public string ReminderText { get; set; }
