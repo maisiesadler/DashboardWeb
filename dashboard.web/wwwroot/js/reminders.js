@@ -5,7 +5,7 @@ $('.triggered [close]')
             console.log('attempting close')
             $.ajax({
                 type: "PUT",
-                url: '/api/Reminders/done',
+                url: '/Reminders/done',
                 data: { id },
                 success: _ => location.reload(),
                 error: err => console.log(err)

@@ -4,14 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dashboard.web.Controllers
 {
-    [Route("api/[controller]")]
-    public class RemindersController : ControllerBase
+    [Route("[controller]")]
+    public class RemindersController : Controller
     {
         private readonly IRemindersProvider _remindersProvider;
 
         public RemindersController(IRemindersProvider remindersProvider)
         {
             _remindersProvider = remindersProvider;
+        }
+
+        public IActionResult Index()
+        {
+            var reminders = _remindersProvider.Get();
+            return View(new RemindersViewModel(reminders));
         }
 
         [HttpPost]
@@ -21,7 +27,7 @@ namespace dashboard.web.Controllers
 
             var remindAt = DateTime.UtcNow.AddSeconds(int.Parse(reminderAddModel.Time));
             _remindersProvider.Add(new Reminder(remindAt, reminderAddModel.ReminderText));
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
         [HttpPut("done")]

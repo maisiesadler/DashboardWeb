@@ -1,0 +1,25 @@
+@model dashboard.web.Models.RemindersViewModel
+<ul>
+    @foreach (var item in Model.Reminders)
+    {
+        <li class="@(@item.Triggered ? "triggered": "")">
+            @item.Value.Date.ToString() - @item.Value.ReminderText
+            @if(item.Triggered){ <div close="@item.Id">close</div>  }
+        </li>
+    }
+</ul>
+
+<form action="/Reminders" method="post">
+    <div class="form-horizontal">
+        <h4>Add New</h4>
+        <hr />
+        <div class="text-danger" />
+        <input type="text" data-val="true" data-val-required="Must provide some text for the reminder." id="ReminderText" name="ReminderText" />
+        <select name="Time" asp-items="Model.Options" id="Time"></select>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</form>

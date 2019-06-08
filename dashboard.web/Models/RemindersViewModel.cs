@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace dashboard.web.Models
 {
-    public class HomepageViewModel
+    public class RemindersViewModel
     {
-        public HomepageViewModel(List<Triggerable<Reminder>> reminders)
+        public RemindersViewModel(List<Triggerable<Reminder>> reminders)
         {
             Reminders = reminders;
             Options = new List<SelectListItem>()

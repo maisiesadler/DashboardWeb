@@ -11,16 +11,13 @@ namespace dashboard.web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRemindersProvider _remindersProvider;
-
-        public HomeController(IRemindersProvider remindersProvider)
+        public HomeController()
         {
-            _remindersProvider = remindersProvider;
         }
 
         public IActionResult Index()
         {
-            return View(new HomepageViewModel(_remindersProvider.Get()));
+            return View();
         }
 
         public IActionResult Privacy()
