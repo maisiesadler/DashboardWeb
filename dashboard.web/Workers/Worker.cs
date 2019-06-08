@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using dashboard.web.Providers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,15 +10,18 @@ namespace dashboard.web.Workers
 {
     public class Worker : BackgroundService
     {
+        private readonly IDateProvider _dateProvider;
         private readonly ServiceWorkerSubscriptionManager _subscriptionManager;
         private readonly IRemindersProvider _remindersProvider;
         private readonly ILogger<Worker> _logger;
 
         public Worker(
+            IDateProvider dateProvider,
             ServiceWorkerSubscriptionManager subscriptionManager,
             IRemindersProvider remindersProvider,
             ILogger<Worker> logger)
         {
+            _dateProvider = dateProvider;
             _subscriptionManager = subscriptionManager;
             _remindersProvider = remindersProvider;
             _logger = logger;
@@ -27,7 +31,7 @@ namespace dashboard.web.Workers
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation($"Worker running at: {DateTime.Now}.");
+                _logger.LogInformation($"Worker running at: {_dateProvider.NowString}.");
                 lock (_remindersProvider.SyncRoot)
                 {
                     var triggerable = _remindersProvider.GetTriggerable();

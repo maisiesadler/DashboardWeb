@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using dashboard.web.Providers;
 
 namespace dashboard.web
 {
     public class Reminder
     {
-        public DateTime Date { get; }
+        public Timestamp Date { get; }
         public string ReminderText { get; }
 
-        public Reminder(DateTime date, string reminderText)
+        public Reminder(Timestamp date, string reminderText)
         {
             Date = date;
             ReminderText = reminderText;
@@ -32,7 +33,14 @@ namespace dashboard.web
         TriggerableInMemDatabase<Reminder> _database = new TriggerableInMemDatabase<Reminder>();
 
         private object _syncRoot = new object();
+        private readonly IDateProvider _dateProvider;
+
         public object SyncRoot => _syncRoot;
+
+        public RemindersProvider(IDateProvider dateProvider)
+        {
+            _dateProvider = dateProvider;
+        }
 
         public long Add(Reminder reminder)
         {
@@ -58,7 +66,7 @@ namespace dashboard.web
         // assumes lock is taken elsewhere
         public List<DbItem<Reminder>> GetTriggerable()
         {
-            var now = DateTime.UtcNow;
+            var now = _dateProvider.Now;
             var triggerable = new List<DbItem<Reminder>>();
             foreach (var item in _database.Get())
             {

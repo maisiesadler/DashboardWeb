@@ -19,5 +19,6 @@ namespace dashboard.web.Models
 
         public List<Triggerable<Reminder>> Reminders { get; set; }
         public List<SelectListItem> Options { get; set; }
+        public int ReminderCount => Reminders.Count;
     }
 }

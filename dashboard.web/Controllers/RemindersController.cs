@@ -1,5 +1,6 @@
 using System;
 using dashboard.web.Models;
+using dashboard.web.Providers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dashboard.web.Controllers
@@ -7,10 +8,14 @@ namespace dashboard.web.Controllers
     [Route("[controller]")]
     public class RemindersController : Controller
     {
+        private readonly IDateProvider _dateProvider;
         private readonly IRemindersProvider _remindersProvider;
 
-        public RemindersController(IRemindersProvider remindersProvider)
+        public RemindersController(
+            IDateProvider dateProvider,
+            IRemindersProvider remindersProvider)
         {
+            _dateProvider = dateProvider;
             _remindersProvider = remindersProvider;
         }
 
@@ -25,7 +30,7 @@ namespace dashboard.web.Controllers
         {
             if (reminderAddModel == null || string.IsNullOrWhiteSpace(reminderAddModel.ReminderText)) return BadRequest();
 
-            var remindAt = DateTime.UtcNow.AddSeconds(int.Parse(reminderAddModel.Time));
+            var remindAt = _dateProvider.In(TimeSpan.FromSeconds(int.Parse(reminderAddModel.Time)));
             _remindersProvider.Add(new Reminder(remindAt, reminderAddModel.ReminderText));
             return RedirectToAction("Index");
         }

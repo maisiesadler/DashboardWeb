@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using dashboard.web.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,7 @@ namespace dashboard.web
             });
 
             services.AddSingleton<ServiceWorkerSubscriptionManager>();
+            services.AddSingleton<IDateProvider, UtcDateProvider>();
             services.AddSingleton<IRemindersProvider, RemindersProvider>();
 
             services.AddControllersWithViews()
