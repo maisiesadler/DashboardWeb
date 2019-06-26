@@ -3,9 +3,9 @@
 <ul>
     @foreach (var item in Model.Reminders)
     {
-        <li class="@(@item.Triggered ? "triggered": "")">
-            @item.Value.Date.ToString() - @item.Value.ReminderText
-            @if(item.Triggered){ <div close="@item.Id">close</div>  }
+        <li class="@(@item.TriggeredAt != null ? "triggered": "")">
+            @item.Date.ToString() - @item.ReminderText
+            @if(item.TriggeredAt != null){ <div close="@item.Id">close</div>  }
         </li>
     }
 </ul>

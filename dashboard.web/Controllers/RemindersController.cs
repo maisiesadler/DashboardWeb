@@ -1,7 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using dashboard.web.Models;
 using dashboard.web.Providers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 
 namespace dashboard.web.Controllers
 {
@@ -10,37 +13,41 @@ namespace dashboard.web.Controllers
     {
         private readonly IDateProvider _dateProvider;
         private readonly IRemindersProvider _remindersProvider;
+        private readonly ILogger<RemindersController> _logger;
 
         public RemindersController(
             IDateProvider dateProvider,
-            IRemindersProvider remindersProvider)
+            IRemindersProvider remindersProvider,
+            ILogger<RemindersController> logger)
         {
             _dateProvider = dateProvider;
             _remindersProvider = remindersProvider;
+            _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var reminders = _remindersProvider.Get();
+            var reminders = await _remindersProvider.ViewActiveAsync();
             return View(new RemindersViewModel(reminders));
         }
 
         [HttpPost]
-        public IActionResult Add([Bind("Time", "ReminderText")] ReminderAddModel reminderAddModel)
+        public async Task<IActionResult> Add([Bind("Time", "ReminderText")] ReminderAddModel reminderAddModel)
         {
             if (reminderAddModel == null || string.IsNullOrWhiteSpace(reminderAddModel.ReminderText)) return BadRequest();
 
             var remindAt = _dateProvider.In(TimeSpan.FromSeconds(int.Parse(reminderAddModel.Time)));
-            _remindersProvider.Add(new Reminder(remindAt, reminderAddModel.ReminderText));
+            await _remindersProvider.AddAsync(new Reminder(remindAt, reminderAddModel.ReminderText));
             return RedirectToAction("Index");
         }
 
         [HttpPut("done")]
-        public IActionResult Done(ReminderCompletedModel reminderCompletedModel)
+        public async Task<IActionResult> Done(ReminderCompletedModel reminderCompletedModel)
         {
+            _logger.LogInformation("closing " + reminderCompletedModel.Id);
             if (reminderCompletedModel == null) return BadRequest();
 
-            _remindersProvider.Complete(reminderCompletedModel.Id);
+            await _remindersProvider.CompleteAsync(new ObjectId(reminderCompletedModel.Id));
             return Ok();
         }
     }

@@ -33,6 +33,7 @@ namespace dashboard.web
             services.AddSingleton<ServiceWorkerSubscriptionManager>();
             services.AddSingleton<IDateProvider, UtcDateProvider>();
             services.AddSingleton<IRemindersProvider, RemindersProvider>();
+            services.AddSingleton<MongoConnection>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson();
@@ -71,6 +72,8 @@ namespace dashboard.web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            app.ApplicationServices.GetRequiredService<MongoConnection>().Connect();
         }
     }
 }

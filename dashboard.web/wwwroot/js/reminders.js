@@ -1,6 +1,7 @@
 $('.triggered [close]')
     .each((i, v) => {
         const id = v.getAttribute('close')
+        console.log('closing', id)
         $(v).click(() => {
             console.log('attempting close')
             $.ajax({

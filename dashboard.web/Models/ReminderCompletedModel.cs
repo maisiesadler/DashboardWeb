@@ -1,7 +1,9 @@
+using MongoDB.Bson;
+
 namespace dashboard.web.Models
 {
     public class ReminderCompletedModel
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
     }
 }

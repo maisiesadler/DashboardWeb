@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using dashboard.web.Providers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace dashboard.web.Models
 {
     public class RemindersViewModel
     {
-        public RemindersViewModel(List<Triggerable<Reminder>> reminders)
+        public RemindersViewModel(List<Reminder> reminders)
         {
             Reminders = reminders;
             Options = new List<SelectListItem>()
@@ -17,7 +18,7 @@ namespace dashboard.web.Models
             };
         }
 
-        public List<Triggerable<Reminder>> Reminders { get; set; }
+        public List<Reminder> Reminders { get; set; }
         public List<SelectListItem> Options { get; set; }
         public int ReminderCount => Reminders.Count;
     }

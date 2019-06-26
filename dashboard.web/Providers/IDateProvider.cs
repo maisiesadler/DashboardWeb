@@ -13,26 +13,26 @@ namespace dashboard.web.Providers
     {
         private DateTime _now => DateTime.UtcNow;
 
-        public Timestamp Now => new Timestamp(_now.Ticks);
+        public Timestamp Now => new Timestamp(_now);
         public string NowString => _now.ToString();
-        public Timestamp In(TimeSpan timeSpan) => new Timestamp(_now.Add(timeSpan).Ticks);
+        public Timestamp In(TimeSpan timeSpan) => new Timestamp(_now.Add(timeSpan));
     }
 
     public class Timestamp
     {
-        private readonly long _timestamp;
+        private readonly DateTime _timestamp;
 
-        internal Timestamp(long timestamp)
+        internal Timestamp(DateTime timestamp)
         {
             _timestamp = timestamp;
         }
 
         public override string ToString()
         {
-            return new DateTime(_timestamp).ToString();
+            return _timestamp.ToString();
         }
 
-        public static implicit operator long(Timestamp timestamp)
+        public static implicit operator DateTime(Timestamp timestamp)
         {
             return timestamp._timestamp;
         }
